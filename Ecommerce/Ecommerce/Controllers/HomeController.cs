@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using LojaVirtual.Models;
+using Ecommerce.Models;
 
-namespace LojaVirtual.Controllers
+namespace Ecommerce.Controllers
 {
     public class HomeController : Controller
     {
