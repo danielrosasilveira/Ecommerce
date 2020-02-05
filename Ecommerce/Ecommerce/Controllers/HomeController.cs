@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Ecommerce.Libraries.Email;
 using Ecommerce.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,11 +10,13 @@ namespace Ecommerce.Controllers
 {
     public class HomeController : Controller
     {
+        #region Index
         public IActionResult Index()
         {
             return View();
         }
-        
+        #endregion
+
         #region Contato - GET
         public IActionResult Contato()
         {
@@ -25,7 +28,18 @@ namespace Ecommerce.Controllers
         [HttpPost]
         public IActionResult Contato(ContatoModel contato)
         {
-            return View();
+            ContatoEmail.EnviarContatoPorEmail(contato);
+
+            return new ContentResult()
+            {
+                Content = string.Format(@"Dados recebidos com sucesso!<br/> 
+                                                                    Nome:{0} <br/>
+                                                                    Email:{1} <br/>
+                                                                    Texto:{2} <br/>", 
+                                                                    contato.Nome, contato.Email, contato.Texto),
+                ContentType = "text/html"
+            };
+            //return View();
         }
         #endregion
 
