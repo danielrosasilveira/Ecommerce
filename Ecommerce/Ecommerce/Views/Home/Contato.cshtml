@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Contato";
+    Ecommerce.Models.ContatoModel contato = (Ecommerce.Models.ContatoModel)ViewData["CONTATO"];
 }
 
 <main role="main">
@@ -46,18 +47,18 @@
                             }
                             @if (ViewData["MSG_E"] != null)
                             {
-                                <p class="alert alert-danger">@ViewData["MSG_E"]</p>
+                                <p class="alert alert-danger">@Html.Raw(ViewData["MSG_E"])</p>
                             }
 
-                            <form role="form" method="post" asp-controller="Home" asp-action="Contato">
+                            <form method="post" asp-controller="Home" asp-action="Contato">
                                 <div class="form-group">
                                     <label for="nome">Nome</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-user"></i></span>
                                         </div>
-                                        <input asp-for="Nome" type="text" id="nome" class="form-control" name="nome" placeholder=""
-                                               required="">
+                                        <input asp-for="Nome" type="text" class="form-control" name="Nome"
+                                               value="@(contato != null?contato.Nome : "")">                                        
                                     </div> <!-- input-group.// -->
                                 </div> <!-- form-group.// -->
 
@@ -67,7 +68,8 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-at"></i></span>
                                         </div>
-                                        <input asp-for="Email" type="text" class="form-control" name="email" id="email" placeholder="">
+                                        <input type="text" class="form-control" asp-for="Email" name="Email"
+                                               value="@(contato != null?contato.Email : "")">
                                     </div> <!-- input-group.// -->
                                 </div> <!-- form-group.// -->
 
@@ -76,18 +78,18 @@
                                         <div class="form-group">
                                             <label for="texto"><span class="hidden-xs">Texto</span> </label>
                                             <div class="form-inline">
-                                                <textarea asp-for="Texto" class="form-control" style="width:100%" name="texto" id="texto"></textarea>
+                                                <textarea asp-for="Texto" class="form-control" style="width:100%" name="Texto">
+                                                    @(contato != null?contato.Texto : "")
+                                                </textarea>                                                
                                             </div>
                                         </div>
                                     </div>
                                 </div> <!-- row.// -->
-                                <button class="subscribe btn btn-primary btn-block" type="submit"> Enviar </button>
+                                <button type="submit" class="subscribe btn btn-primary btn-block"> Enviar </button>
                             </form>
                         </div> <!-- card-body.// -->
                     </article> <!-- card.// -->
-
                 </div> <!-- code-wrap.// -->
-
             </aside>
         </div>
     </div>
