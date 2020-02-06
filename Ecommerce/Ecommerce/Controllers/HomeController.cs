@@ -28,18 +28,18 @@ namespace Ecommerce.Controllers
         [HttpPost]
         public IActionResult Contato(ContatoModel contato)
         {
-            ContatoEmail.EnviarContatoPorEmail(contato);
-
-            return new ContentResult()
+            try
             {
-                Content = string.Format(@"Dados recebidos com sucesso!<br/> 
-                                                                    Nome:{0} <br/>
-                                                                    Email:{1} <br/>
-                                                                    Texto:{2} <br/>", 
-                                                                    contato.Nome, contato.Email, contato.Texto),
-                ContentType = "text/html"
-            };
-            //return View();
+                ContatoEmail.EnviarContatoPorEmail(contato);
+
+                ViewData["MSG_S"] = "Mensagem de contato enviado com sucesso!";
+            }
+            catch (Exception ex)
+            {
+                ViewData["MSG_E"] = "Ops! Tivemos um erro, tente novamente mais tarde!";
+                //TODO - Implementar Log
+            } 
+            return View();
         }
         #endregion
 
