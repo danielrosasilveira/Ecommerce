@@ -7,14 +7,40 @@ using Ecommerce.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Ecommerce.Database;
 
 namespace Ecommerce.Controllers
 {
     public class HomeController : Controller
     {
+        private EcommerceContext _banco;
+        public HomeController(EcommerceContext banco)
+        {
+            _banco = banco;
+        }
+
         #region Index
+        [HttpGet]
         public IActionResult Index()
         {
+            return View();
+        }
+        #endregion
+
+        #region Index - POST
+        [HttpPost]
+        public IActionResult Index(NewsletterEmailModel newsletter)
+        {
+            if (ModelState.IsValid)
+            {
+                //TODO - Adição no banco de dados
+                _banco.NewsletterEmails.Add(newsletter);
+                _banco.SaveChanges();
+
+                TempData["MSG_S"] = "E-mail cadastrado! Agora você irá receber promoções especiais no seu e-mail!";
+
+                return RedirectToAction(nameof(Index));
+            }
             return View();
         }
         #endregion
