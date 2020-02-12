@@ -12,7 +12,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 
-
 namespace Ecommerce
 {
     public class Startup
