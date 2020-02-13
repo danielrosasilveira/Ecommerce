@@ -14,6 +14,7 @@ namespace Ecommerce.Controllers
     public class HomeController : Controller
     {
         private EcommerceContext _banco;
+
         public HomeController(EcommerceContext banco)
         {
             _banco = banco;
@@ -100,6 +101,21 @@ namespace Ecommerce.Controllers
         #region CadastroCliente - GET
         public IActionResult CadastroCliente()
         {
+            return View();
+        }
+        #endregion
+
+        #region CadastroCliente - POST
+        [HttpPost]
+        public IActionResult CadastroCliente(ClienteModel cliente)
+        {
+            if (ModelState.IsValid)
+            {
+                
+                TempData["MSG_S"] = "Cadastro realizado com sucesso!";
+                //TODO - Implemento redirecionamentos diferentes (Painel, Carrinho de Compras, etc).
+                return RedirectToAction(nameof(CadastroCliente));                
+            }
             return View();
         }
         #endregion
