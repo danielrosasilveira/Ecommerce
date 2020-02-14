@@ -8,16 +8,19 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Ecommerce.Database;
+using Ecommerce.Repositories.Contracts;
 
 namespace Ecommerce.Controllers
 {
     public class HomeController : Controller
     {
-        private EcommerceContext _banco;
+        private IClienteRepository _repositoryCliente;
+        private INewsletterRepository _repositoryNewsletter;
 
-        public HomeController(EcommerceContext banco)
+        public HomeController(IClienteRepository repositoryCliente, INewsletterRepository repositoryNewsletter)
         {
-            _banco = banco;
+            _repositoryCliente = repositoryCliente;
+            _repositoryNewsletter = repositoryNewsletter;
         }
 
         #region Index
@@ -34,10 +37,8 @@ namespace Ecommerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                //TODO - Adição no banco de dados
-                _banco.NewsletterEmails.Add(newsletter);
-                _banco.SaveChanges();
-
+                _repositoryNewsletter.Cadastrar(newsletter);
+                
                 TempData["MSG_S"] = "E-mail cadastrado! Agora você irá receber promoções especiais no seu e-mail!";
 
                 return RedirectToAction(nameof(Index));
@@ -111,7 +112,7 @@ namespace Ecommerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                
+                _repositoryCliente.Cadastrar(cliente);
                 TempData["MSG_S"] = "Cadastro realizado com sucesso!";
                 //TODO - Implemento redirecionamentos diferentes (Painel, Carrinho de Compras, etc).
                 return RedirectToAction(nameof(CadastroCliente));                

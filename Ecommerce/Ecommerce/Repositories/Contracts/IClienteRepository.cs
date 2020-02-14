@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ecommerce.Repositories
+namespace Ecommerce.Repositories.Contracts
 {
-    interface IClienteRepository
+    public interface IClienteRepository
     {
         ClienteModel Login(string Email, string Senha);
 
@@ -18,7 +18,7 @@ namespace Ecommerce.Repositories
 
         ClienteModel ObterCliente(int Id);
 
-        List<ClienteModel> ObterTodosClilentes();
+        IEnumerable<ClienteModel> ObterTodosClilentes();
 
     }
 }

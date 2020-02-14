@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Database;
 using Ecommerce.Models;
+using Ecommerce.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace Ecommerce.Repositories
             return _banco.Clientes.Find(Id);
         }
 
-        public List<ClienteModel> ObterTodosClilentes()
+        public IEnumerable<ClienteModel> ObterTodosClilentes()
         {
             return _banco.Clientes.ToList();
         }
