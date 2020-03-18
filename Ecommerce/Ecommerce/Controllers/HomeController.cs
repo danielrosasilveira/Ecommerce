@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Ecommerce.Libraries.Email;
 using Ecommerce.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-using Ecommerce.Database;
 using Ecommerce.Repositories.Contracts;
+using Ecommerce.Libraries.Login;
 
 namespace Ecommerce.Controllers
 {
@@ -16,12 +14,16 @@ namespace Ecommerce.Controllers
     {
         private IClienteRepository _repositoryCliente;
         private INewsletterRepository _repositoryNewsletter;
+        private LoginCliente _loginCliente;
 
-        public HomeController(IClienteRepository repositoryCliente, INewsletterRepository repositoryNewsletter)
+        #region Constructor
+        public HomeController(IClienteRepository repositoryCliente, INewsletterRepository repositoryNewsletter, LoginCliente loginCliente)
         {
             _repositoryCliente = repositoryCliente;
             _repositoryNewsletter = repositoryNewsletter;
+            _loginCliente = loginCliente;
         }
+        #endregion
 
         #region Index
         [HttpGet]
@@ -93,9 +95,44 @@ namespace Ecommerce.Controllers
         #endregion
 
         #region Login - GET
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
+        }
+        #endregion
+
+        #region Login - POST
+        [HttpPost]
+        public IActionResult Login(ClienteModel cliente)
+        {
+            ClienteModel clienteDB = _repositoryCliente.Login(cliente.Email, cliente.Senha);
+            if (clienteDB != null)
+            {
+                _loginCliente.Login(clienteDB);
+                return new RedirectResult(Url.Action(nameof(Painel)));
+            }
+            else
+            {
+                ViewData["MSG_E"] = "Usuário ou Senha Inválido";
+                return View();
+            }
+        }
+        #endregion
+
+        #region Painel - GET
+        [HttpGet]
+        public IActionResult Painel()
+        {
+            ClienteModel cliente = _loginCliente.GetCliente();
+            if (cliente != null)
+            {
+                return new ContentResult() { Content = "Acesso concedido: " + cliente.Id };
+            }
+            else
+            {
+                return new ContentResult() { Content = "Acesso Negado!" };
+            }
         }
         #endregion
 

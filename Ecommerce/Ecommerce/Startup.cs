@@ -1,17 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Ecommerce.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Ecommerce.Repositories;
 using Ecommerce.Repositories.Contracts;
+using Ecommerce.Libraries.Session;
+using Ecommerce.Libraries.Login;
 
 namespace Ecommerce
 {
@@ -28,10 +25,19 @@ namespace Ecommerce
         public void ConfigureServices(IServiceCollection services)
         {
             //Padrão Repository
+            services.AddHttpContextAccessor();
             services.AddScoped<IClienteRepository, ClienteRepository>();
             services.AddScoped<INewsletterRepository, NewsletterRepository>();
 
-            services.AddControllersWithViews();            
+            services.AddControllersWithViews();
+
+            //Session - Configuração
+            services.AddMemoryCache();//Guardar os dados na memória
+            services.AddSession(options=> { 
+            });
+
+            services.AddScoped<Session>();
+            services.AddScoped<LoginCliente>();
 
             //endereço do banco de dados no appsettings.json
             services.AddDbContext<EcommerceContext>(options => 
@@ -59,6 +65,8 @@ namespace Ecommerce
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession();
             
             
             app.UseEndpoints(endpoints =>
